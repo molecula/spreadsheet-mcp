@@ -439,6 +439,7 @@ def format_cells(
     font_color: str = "",
     background_color: str = "",
     alignment: str = "",
+    number_format: str = "",
 ) -> str:
     """Apply formatting to a range of cells.
 
@@ -447,6 +448,10 @@ def format_cells(
           format_cells("abc", 0, 0, 1, 0, 5, bold=True, background_color="#4285F4")
         - Center align cells A1:C10:
           format_cells("abc", 0, 0, 10, 0, 3, alignment="CENTER")
+        - Currency format for data cells:
+          format_cells("abc", 0, 6, 34, 2, 80, number_format="$#,##0")
+        - Percent format:
+          format_cells("abc", 0, 10, 11, 2, 80, number_format="0.0%")
 
     Note: Indices are 0-based. Row 1 in sheets = index 0. Column A = index 0.
     end_row and end_col are EXCLUSIVE (like Python ranges).
@@ -464,6 +469,7 @@ def format_cells(
         font_color: Hex color for text (e.g., "#FF0000"=red, "#FFFFFF"=white).
         background_color: Hex color for cell background (e.g., "#4285F4"=blue).
         alignment: "LEFT", "CENTER", or "RIGHT".
+        number_format: Google Sheets number pattern (e.g., "$#,##0", "0.0%").
 
     Returns:
         Success message.
@@ -495,6 +501,7 @@ def format_cells(
         font_color=hex_to_rgb(font_color),
         background_color=hex_to_rgb(background_color),
         horizontal_alignment=alignment if alignment else None,
+        number_format=number_format if number_format else None,
     )
     return json.dumps({"success": True, "message": "Formatting applied"})
 

@@ -530,6 +530,15 @@ class SheetsClient:
     # Formatting
     # =========================================================================
 
+    @staticmethod
+    def _number_format_type(pattern: str) -> str:
+        """Infer Google Sheets numberFormat.type from a pattern string."""
+        if pattern.startswith("$") or "[$$]" in pattern:
+            return "CURRENCY"
+        if "%" in pattern:
+            return "PERCENT"
+        return "NUMBER"
+
     def format_cells(
         self,
         spreadsheet_id: str,
@@ -544,6 +553,7 @@ class SheetsClient:
         font_color: dict | None = None,
         background_color: dict | None = None,
         horizontal_alignment: str | None = None,
+        number_format: str | None = None,
     ) -> bool:
         """Apply formatting to a range of cells.
 
@@ -560,6 +570,7 @@ class SheetsClient:
             font_color: RGB color dict {"red": 0-1, "green": 0-1, "blue": 0-1}.
             background_color: RGB color dict for cell background.
             horizontal_alignment: "LEFT", "CENTER", or "RIGHT".
+            number_format: Google Sheets pattern (e.g. "$#,##0", "0.0%").
 
         Returns:
             True if successful.
@@ -594,6 +605,14 @@ class SheetsClient:
         if horizontal_alignment is not None:
             cell_format["horizontalAlignment"] = horizontal_alignment
             fields.append("userEnteredFormat.horizontalAlignment")
+
+        # Number format (currency, percent, etc.)
+        if number_format is not None:
+            cell_format["numberFormat"] = {
+                "type": self._number_format_type(number_format),
+                "pattern": number_format,
+            }
+            fields.append("userEnteredFormat.numberFormat")
 
         if not fields:
             return True  # Nothing to format
