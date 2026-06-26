@@ -16,7 +16,9 @@ spreadsheet-mcp = "spreadsheet_mcp.server:main"
 
 [project.optional-dependencies]
 dev = [
+    "mypy>=1.11.0",
     "ruff>=0.4.0",
+    "types-requests>=2.32.0",
 ]
 
 [build-system]
@@ -25,3 +27,20 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/spreadsheet_mcp"]
+
+[tool.ruff]
+target-version = "py311"
+src = ["src"]
+
+[tool.ruff.lint]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+mypy_path = "src"
+packages = ["spreadsheet_mcp"]
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+disable_error_code = ["no-any-return"]

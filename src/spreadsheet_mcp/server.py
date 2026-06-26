@@ -573,17 +573,17 @@ def create_chart(
     position_row: int = 0,
     position_col: int = 5,
     domain_column: int = 0,
-    series_columns: str = ""
+    series_columns: str = "",
 ) -> str:
     """Create an embedded chart with MULTIPLE SERIES support.
 
     Examples:
         - Multi-series line chart (auto-detect all columns B-F as series):
           create_chart("abc", 0, "LINE", "Sheet1!A1:F10", "Stock Prices")
-          
+
         - Explicit series columns (B=1, C=2, D=3, E=4 as separate lines):
           create_chart("abc", 0, "LINE", "A1:E10", "Comparison", 0, 7, 0, "1,2,3,4")
-          
+
         - Pie chart (single series from column B):
           create_chart("abc", 0, "PIE", "A1:B5", "Distribution")
 
@@ -618,12 +618,12 @@ def create_chart(
         JSON with chart_id for later reference.
     """
     client = get_client()
-    
+
     # Parse series_columns string to list
     series_list = None
     if series_columns.strip():
         series_list = [int(x.strip()) for x in series_columns.split(",") if x.strip()]
-    
+
     result = client.create_chart(
         spreadsheet_id=spreadsheet_id,
         sheet_id=sheet_id,
@@ -633,7 +633,7 @@ def create_chart(
         position_row=position_row,
         position_col=position_col,
         domain_column=domain_column,
-        series_columns=series_list
+        series_columns=series_list,
     )
     return json.dumps(result, indent=2)
 
